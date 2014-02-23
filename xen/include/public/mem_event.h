@@ -47,6 +47,7 @@
 #define MEM_EVENT_REASON_SINGLESTEP  6    /* single step was invoked: gla/gfn are RIP */
 #define MEM_EVENT_REASON_MSR         7    /* MSR was hit: gfn is MSR value, gla is MSR address;
                                              does NOT honour HVMPME_onchangeonly */
+#define MEM_EVENT_REASON_DR          8    /* Debug register triggered: gla/gfn are RIP */
 
 typedef struct mem_event_st {
     uint32_t flags;

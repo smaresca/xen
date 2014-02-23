@@ -127,6 +127,7 @@
 #define HVM_PARAM_MEMORY_EVENT_INT3         23
 #define HVM_PARAM_MEMORY_EVENT_SINGLE_STEP  25
 #define HVM_PARAM_MEMORY_EVENT_MSR          30
+#define HVM_PARAM_MEMORY_EVENT_DR           31
 
 #define HVMPME_MODE_MASK       (3 << 0)
 #define HVMPME_mode_disabled   0

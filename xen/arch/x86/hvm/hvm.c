@@ -5187,6 +5187,18 @@ int hvm_memory_event_int3(unsigned long gla)
                                   gfn, 0, 1, gla);
 }
 
+int hvm_memory_event_dr(unsigned long gla) 
+{
+    uint32_t pfec = PFEC_page_present;
+    unsigned long gfn;
+    gfn = paging_gva_to_gfn(current, gla, &pfec);
+
+    return hvm_memory_event_traps(current->domain->arch.hvm_domain
+                                    .params[HVM_PARAM_MEMORY_EVENT_INT3],
+                                  MEM_EVENT_REASON_INT3,
+                                  gfn, 0, 1, gla);
+}
+
 int hvm_memory_event_single_step(unsigned long gla)
 {
     uint32_t pfec = PFEC_page_present;

@@ -525,6 +525,8 @@ void hvm_memory_event_cr4(unsigned long value, unsigned long old);
 void hvm_memory_event_msr(unsigned long msr, unsigned long value);
 /* Called for current VCPU on int3: returns -1 if no listener */
 int hvm_memory_event_int3(unsigned long gla);
+/* Called for current VCPU on DR event: returns -1 if no listener */
+int hvm_memory_event_dr(unsigned long gla);
 
 /* Called for current VCPU on single step: returns -1 if no listener */
 int hvm_memory_event_single_step(unsigned long gla);

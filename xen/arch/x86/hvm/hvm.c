@@ -3557,6 +3557,8 @@ int hvm_msr_read_intercept(unsigned int msr, uint64_t *msr_content)
     hvm_cpuid(1, NULL, NULL, NULL, &edx);
     mtrr = !!(edx & cpufeat_mask(X86_FEATURE_MTRR));
 
+    printk("MARESCA: domid=%u msr read is %u\n", v->domain->domain_id, msr);
+
     switch ( msr )
     {
     case MSR_EFER:

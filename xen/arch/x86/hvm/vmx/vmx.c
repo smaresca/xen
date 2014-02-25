@@ -1886,8 +1886,10 @@ static void vmx_dr_access(unsigned long exit_qualification,
 
     HVMTRACE_0D(DR_WRITE);
 
-    if( v->domain->arch.hvm_domain.params[HVM_PARAM_MEMORY_EVENT_DR] )
-        hvm_memory_event_dr(regs->eip);
+    if( v->domain->arch.hvm_domain.params[HVM_PARAM_MEMORY_EVENT_DR] ) {
+        unsigned long dr = VMX_DEBUG_REG_ACCESS_NUM(exit_qualification);
+        hvm_memory_event_dr(dr, regs->eip);
+    }
 
     if ( !v->arch.hvm_vcpu.flag_dr_dirty )
         __restore_debug_registers(v);

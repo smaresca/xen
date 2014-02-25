@@ -211,6 +211,18 @@ static inline unsigned long pi_get_pir(struct pi_desc *pi_desc, int group)
 #define VMX_CONTROL_REG_ACCESS_GPR(eq)  (((eq) >> 8) & 0xf)
 
 /*
+ * Exit Qualifications for MOV for Debug Register Access
+ */
+ /* Bit 2:0 - debug register number (DRn) */
+#define VMX_DEBUG_REG_ACCESS_NUM(eq)            ((eq) & 0x7)
+ /* Bit 4 - access type (DR write, DR read) */
+#define VMX_DEBUG_REG_ACCESS_TYPE(eq)           ((eq >> 4) & 0x2)
+#define VMX_DEBUG_REG_ACCESS_TYPE_MOV_TO_DR     0
+#define VMX_DEBUG_REG_ACCESS_TYPE_MOV_FROM_DR   1
+ /* Bit 11:8 - general purpose register source/destination */
+#define VMX_DEBUG_REG_ACCESS_GPR(eq)            ((eq >> 8) & 0xf)
+
+/*
  * Access Rights
  */
 #define X86_SEG_AR_SEG_TYPE     0xf        /* 3:0, segment type */

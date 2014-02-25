@@ -5098,7 +5098,8 @@ int hvm_debug_op(struct vcpu *v, int32_t op)
 
 static int hvm_memory_event_traps(long p, uint32_t reason,
                                   unsigned long value, unsigned long old, 
-                                  bool_t gla_valid, unsigned long gla) 
+                                  bool_t gla_valid, unsigned long gla,
+                                  bool_t access_r, bool_t access_w, bool_t access_x) 
 {
     struct vcpu* v = current;
     struct domain *d = v->domain;
@@ -5139,6 +5140,10 @@ static int hvm_memory_event_traps(long p, uint32_t reason,
     {
         req.gla = old;
     }
+
+    req.access_r = access_r;
+    req.access_w = access_w;
+    req.access_x = access_x;
     
     mem_event_put_request(d, &d->mem_event->access, &req);
     
@@ -5150,7 +5155,7 @@ void hvm_memory_event_cr0(unsigned long value, unsigned long old)
     hvm_memory_event_traps(current->domain->arch.hvm_domain
                              .params[HVM_PARAM_MEMORY_EVENT_CR0],
                            MEM_EVENT_REASON_CR0,
-                           value, old, 0, 0);
+                           value, old, 0, 0, 0, 1, 0);
 }
 
 void hvm_memory_event_cr3(unsigned long value, unsigned long old) 
@@ -5158,7 +5163,7 @@ void hvm_memory_event_cr3(unsigned long value, unsigned long old)
     hvm_memory_event_traps(current->domain->arch.hvm_domain
                              .params[HVM_PARAM_MEMORY_EVENT_CR3],
                            MEM_EVENT_REASON_CR3,
-                           value, old, 0, 0);
+                           value, old, 0, 0, 0, 1, 0);
 }
 
 void hvm_memory_event_cr4(unsigned long value, unsigned long old) 
@@ -5166,7 +5171,7 @@ void hvm_memory_event_cr4(unsigned long value, unsigned long old)
     hvm_memory_event_traps(current->domain->arch.hvm_domain
                              .params[HVM_PARAM_MEMORY_EVENT_CR4],
                            MEM_EVENT_REASON_CR4,
-                           value, old, 0, 0);
+                           value, old, 0, 0, 0, 1, 0);
 }
 
 void hvm_memory_event_msr(unsigned long msr, unsigned long value)
@@ -5174,7 +5179,7 @@ void hvm_memory_event_msr(unsigned long msr, unsigned long value)
     hvm_memory_event_traps(current->domain->arch.hvm_domain
                              .params[HVM_PARAM_MEMORY_EVENT_MSR],
                            MEM_EVENT_REASON_MSR,
-                           value, ~value, 1, msr);
+                           value, ~value, 1, msr, 0, 1, 0);
 }
 
 int hvm_memory_event_int3(unsigned long gla) 
@@ -5186,7 +5191,7 @@ int hvm_memory_event_int3(unsigned long gla)
     return hvm_memory_event_traps(current->domain->arch.hvm_domain
                                     .params[HVM_PARAM_MEMORY_EVENT_INT3],
                                   MEM_EVENT_REASON_INT3,
-                                  gfn, 0, 1, gla);
+                                  gfn, 0, 1, gla, 0, 0, 0);
 }
 
 int hvm_memory_event_single_step(unsigned long gla)
@@ -5198,7 +5203,7 @@ int hvm_memory_event_single_step(unsigned long gla)
     return hvm_memory_event_traps(current->domain->arch.hvm_domain
             .params[HVM_PARAM_MEMORY_EVENT_SINGLE_STEP],
             MEM_EVENT_REASON_SINGLESTEP,
-            gfn, 0, 1, gla);
+            gfn, 0, 1, gla, 0, 0, 0);
 }
 
 int nhvm_vcpu_hostrestore(struct vcpu *v, struct cpu_user_regs *regs)
